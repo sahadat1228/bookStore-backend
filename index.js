@@ -6,51 +6,42 @@ import cors from "cors";
 import bookRoute from "./route/book.route.js";
 import userRoute from "./route/user.route.js";
 
+// ১. সবার আগে dotenv লোড করতে হয়
+dotenv.config();
+
 const app = express();
 
-// Middleware
+// ২. Middleware (আগে CORS দিন, তারপর JSON)
 app.use(cors());
 app.use(express.json());
 
-dotenv.config();
+const PORT = process.env.PORT || 4001;
+// খেয়াল করুন: এখানে MongoDB_URI ব্যবহার করুন যা আপনি Vercel-এ দিয়েছেন
+const URI = process.env.MongoDB_URI; 
 
-const PORT = process.env.PORT || 4000;
-const URI = process.env.MongoDBURI;
+// ৩. ডাটাবেস কানেকশন লজিক (Vercel-এর জন্য সহজ রাখা ভালো)
+mongoose.connect(URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+})
+.then(() => console.log("Connected to MongoDB"))
+.catch((error) => console.log("Error connecting to MongoDB: ", error));
 
-// Database Connection Function
-let isConnected = false;
-async function connectToMongoDB() {
-  try {
-    if (isConnected) return;
-    await mongoose.connect(URI);
-    isConnected = true;
-    console.log("Connected to mongoDB");
-  } catch (error) {
-    console.log("Error connecting to MongoDB: ", error);
-  }
-}
-
-// Middleware to check MongoDB connection for Vercel
-app.use(async (req, res, next) => {
-  if (!isConnected) {
-    await connectToMongoDB();
-  }
-  next();
-});
-
-// Initializing Database Connection
-connectToMongoDB();
-
-// Defining Routes
+// ৪. Defining Routes
 app.use("/book", bookRoute);
 app.use("/user", userRoute);
 
-// Starting Server (Local development only)
+// হোম রুট (সার্ভার ঠিক আছে কি না চেক করার জন্য)
+app.get("/", (req, res) => {
+    res.send("Book Store Server is Running!");
+});
+
+// ৫. সার্ভার লিসেনিং (লোকাল ও ভেরসেল উভয়ের জন্য)
 if (process.env.NODE_ENV !== "production") {
-  app.listen(PORT, () => {
-    console.log(`Server is listening on port ${PORT}`);
-  });
+    app.listen(PORT, () => {
+        console.log(`Server is listening on port ${PORT}`);
+    });
 }
 
-// Export for Vercel
+// ৬. Export for Vercel
 export default app;
