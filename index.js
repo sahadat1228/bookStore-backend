@@ -10,9 +10,12 @@ dotenv.config();
 
 const app = express();
 
-// ১. CORS কনফিগারেশন - এটি আপনার ব্রাউজারের এরর ঠিক করবে
+// ১. CORS কনফিগারেশন - আপনার নতুন ফ্রন্টএন্ড ডোমেইন এখানে অ্যাড করা হয়েছে
 app.use(cors({
-    origin: ["http://localhost:5173", "https://book-store-backend-git-main-sahadat-khans-projects.vercel.app"],
+    origin: [
+        "http://localhost:5173", 
+        "https://book-store-frontend-tan-five.vercel.app"
+    ],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true
 }));
@@ -21,7 +24,7 @@ app.use(express.json());
 
 const PORT = process.env.PORT || 4001;
 
-// ২. আপনার .env ফাইলের নামের সাথে মিল রেখে MongoDBURI ব্যবহার করুন
+// ২. আপনার .env ফাইলের নামের সাথে মিল রেখে MongoDB_URI ব্যবহার করুন
 const URI = process.env.MongoDB_URI; 
 
 // ৩. ডাটাবেস কানেকশন লজিক
