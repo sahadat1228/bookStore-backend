@@ -15,5 +15,8 @@ const userSchema = mongoose.Schema({
     required: true,
   },
 });
-const User = mongoose.model("User", userSchema);
+
+// Vercel বা সার্ভারলেস এনভায়রনমেন্টে মডেল রি-ডিক্লেয়ারেশন সমস্যা এড়াতে এটি সেরা উপায়
+const User = mongoose.models.User || mongoose.model("User", userSchema);
+
 export default User;
