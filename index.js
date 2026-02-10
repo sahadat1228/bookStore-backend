@@ -22,7 +22,7 @@ app.use(express.json());
 const PORT = process.env.PORT || 4001;
 
 // ২. আপনার .env ফাইলের নামের সাথে মিল রেখে MongoDBURI ব্যবহার করুন
-const URI = process.env.MongoDBURI; 
+const URI = process.env.MongoDB_URI; 
 
 // ৩. ডাটাবেস কানেকশন লজিক
 mongoose.connect(URI)
